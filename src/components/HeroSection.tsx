@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import CompassLogo from '@/components/CompassLogo';
 import { Button } from '@/components/ui/button';
+import { trackClick, isDevanshCampaign, trackDevanshLead } from '@/lib/analytics';
 
 interface HeroSectionProps {
   onNavigate: (sectionId: string) => void;
@@ -37,6 +38,14 @@ const HeroSection = ({ onNavigate }: HeroSectionProps) => {
   }, []);
 
   const handleBeginJourney = () => {
+    // Track button click with our analytics
+    trackClick('button_click', 'begin-journey-cta', 'Begin Your Journey', '/pathways');
+    
+    // If from Devansh campaign, track as a lead
+    if (isDevanshCampaign()) {
+      trackDevanshLead();
+    }
+    
     navigate('/pathways');
   };
 
