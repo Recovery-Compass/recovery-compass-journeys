@@ -1,0 +1,4 @@
+# Ignore generated files in language stats
+bun.lockb linguist-generated=true
+package-lock.json linguist-generated=true
+node_modules/ linguist-generated=true
