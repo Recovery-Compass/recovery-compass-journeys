@@ -1,0 +1,77 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      
+# Custom Headers - Override default no-cache behavior
+customHeaders:
+  # Static assets - cache for 1 year
+  - pattern: '**/*.js'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=31536000, immutable
+      - key: X-Content-Type-Options
+        value: nosniff
+        
+  - pattern: '**/*.css'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=31536000, immutable
+      - key: X-Content-Type-Options
+        value: nosniff
+        
+  - pattern: '**/*.{jpg,jpeg,png,gif,ico,svg,webp,woff,woff2,ttf,eot}'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=31536000, immutable
+      - key: Accept-Ranges
+        value: bytes
+        
+  # HTML files - shorter cache
+  - pattern: '**/*.html'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400
+      - key: X-Frame-Options
+        value: SAMEORIGIN
+      - key: X-XSS-Protection
+        value: 1; mode=block
+        
+  - pattern: '/index.html'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=0, s-maxage=3600, must-revalidate
+      - key: X-Frame-Options
+        value: SAMEORIGIN
+        
+  # Service worker
+  - pattern: '/sw.js'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=0, must-revalidate
+      - key: Service-Worker-Allowed
+        value: /
+        
+  # Default for everything else
+  - pattern: '**/*'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=3600, s-maxage=86400
+      - key: X-Content-Type-Options
+        value: nosniff
+      - key: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - key: Permissions-Policy
+        value: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
