@@ -12,14 +12,33 @@
   ],
   "author": "Eric B. Jones <partnerships@recovery-compass.org>",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Recovery-Compass/recovery-compass-journeys.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Recovery-Compass/recovery-compass-journeys/issues"
+  },
+  "homepage": "https://github.com/Recovery-Compass/recovery-compass-journeys#readme",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:worker": "vite build && wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
+    "pages:dev": "wrangler pages dev --compatibility-date=2025-01-26",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "preview": "vite preview",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "tail": "wrangler tail",
+    "kv:list": "wrangler kv:namespace list",
+    "secrets:list": "wrangler secret list",
+    "verify:rls": "tsx scripts/verify-rls.ts",
+    "verify:solo": "bash scripts/verify-guardrails.sh",
+    "install:hooks": "bash scripts/install-git-hooks.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -83,6 +102,7 @@
     "zustand": "^5.0.5"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250807.0",
     "@eslint/js": "^9.9.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.5.5",
@@ -99,10 +119,11 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "wrangler": "^4.28.1"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": "^18 || ^20",
     "npm": ">=8.0.0"
   }
 }
